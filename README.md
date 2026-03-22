@@ -281,34 +281,6 @@ The most important text input for the model is:
 - clean_text
 
 --------------------------------------------------------------------------------
-WHAT TO UPLOAD TO GITHUB
---------------------------------------------------------------------------------
-
-Recommended files to upload:
-- 404projecct.ipynb
-- textPreprocess_v2.py
-- dataset_ready_check_v2.py
-- split_dataset_v2.py
-- train_logistic_regression_v3.py
-- train_linear_svm_v2.py
-- train_best_single_model_v3_fixed.py
-- utils_eval_v2.py
-- credibility_model.py
-- build_combined_credibility_model.py
-- apply_combined_credibility_model.py
-- suspicious_review_flagger_v2.py
-- prepare_new_amazon_test_data.py
-- README.md
-- .gitignore
-
-Recommended files NOT to upload:
-- raw multi-GB datasets
-- full processed CSV training data
-- full flagged large CSV outputs
-- __pycache__
-- .ipynb_checkpoints
-
---------------------------------------------------------------------------------
 IMPORTANT NOTE ABOUT CLAIMS
 --------------------------------------------------------------------------------
 

@@ -11,6 +11,7 @@ The project does not claim to prove that a review is fake. Instead, it estimates
 
 ================================================================================
 1. PROJECT OVERVIEW
+
 ================================================================================
 
 The project has two connected parts.

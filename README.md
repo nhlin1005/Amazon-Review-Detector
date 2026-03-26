@@ -111,7 +111,7 @@ project/
 
 ## 5. File-by-File Explanation
 
-### `404project.ipynb`
+### `404projecct.ipynb`
 This is the main notebook for the project.
 
 Use it to present:

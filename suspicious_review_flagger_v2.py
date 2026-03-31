@@ -6,7 +6,7 @@ import pandas as pd
 from credibility_model import CredibilityConfig, ReviewCredibilityScorer
 
 INPUT_PATH = r"dataset\amazon_reviews_ready.csv"
-SENTIMENT_BUNDLE_PATH = r"dataset\best_single_review_model_v3.joblib"
+SENTIMENT_BUNDLE_PATH = r"dataset\best_single_review_model_nn.joblib"
 OUTPUT_PATH = r"dataset\amazon_reviews_flagged_v2.csv"
 SUMMARY_PATH = r"dataset\suspicious_review_summary_v2.csv"
 

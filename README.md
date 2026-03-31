@@ -1,468 +1,126 @@
-# Amazon Review Detector Using Machine Learning
+Amazon Review Sentiment and Credibility Analyzer
 
-This project builds an Amazon review analysis system that combines **sentiment classification** with **low-credibility review detection**.
+Project Description
+============================================================
 
-The system is designed to answer two practical questions when reading Amazon reviews:
+This project analyzes Amazon reviews with two connected tasks.
 
-1. What sentiment does the review express?
-2. Does the review look potentially low-credibility or suspicious?
+First, it performs sentiment classification. The sentiment model predicts
+whether a review is negative, neutral, or positive.
 
-The project does **not** claim to prove that a review is fake. Instead, it estimates the possibility that a review may be low-credibility based on review text, metadata, sentiment behavior, and interpretable suspiciousness signals.
+Second, it performs credibility and suspiciousness analysis. The system gives
+each review a credibility score and explains why a review may look suspicious,
+such as duplicate-like wording, repetitive text, very short generic praise,
+or mismatch between the star rating and the review text.
 
-## 1. Project Overview
+Important note:
+This project does not prove that a review is fake or AI-generated.
+It only estimates whether a review looks low-credibility or suspicious.
 
-The project has two connected parts.
 
-### Part 1: Sentiment Classification
-The sentiment model predicts whether a review is:
-- **negative**
-- **neutral**
-- **positive**
+Datasets Used for Training
+============================================================
 
-This part helps summarize what the review is saying.
+The training data comes from Amazon review datasets in these categories:
 
-### Part 2: Low-Credibility / Suspicious Review Detection
-The credibility module checks whether a review shows warning signs such as:
-- repetitive wording
-- duplicate-like text
-- very short generic praise
-- rating-text mismatch
-- weak metadata patterns such as not verified purchase
+- Cell Phones and Accessories
+- Industrial and Scientific
+- Sports and Outdoors
 
-This part helps estimate whether a review may be low-credibility.
+These category files are processed, cleaned, combined, and then split into:
 
-By combining both parts, the final system can describe:
-- the sentiment of the review
-- the suspiciousness / credibility level of the review
-- the reasons why the review was flagged
-
-## 2. Final Output of the System
-
-For each review, the final combined system can output:
-
-- `predicted_sentiment`
-- `low_credibility_score`
-- `low_credibility_label`
-- `suspicious_label`
-- `suspicious_reasons`
-
-This means the project can take a processed review dataset as input and return a credibility estimate for each review.
-
-## 3. Final Result Summary
-
-Best final sentiment model:
-- **Test Accuracy:** 0.9176
-- **Test Macro-F1:** 0.7352
-
-The combined credibility model can process a new dataset and assign:
-- a low-credibility score
-- a risk label
-- a suspicious label
-- explanations for the flag
-
-Example low-credibility labels:
-- `low`
-- `medium`
-- `high`
-
-Example suspicious labels:
-- `suspicious`
-- `not_suspicious`
-
-## 4. Repository Layout
-
-Typical layout:
-
-```text
-project/
-├── 404projecct.ipynb                     # Main notebook / final presentation notebook
-├── textPreprocess_v2.py                 # Raw Amazon review preprocessing
-├── dataset_ready_check_v2.py            # Dataset sanity checks
-├── split_dataset_v2.py                  # Train / val / test split
-├── train_logistic_regression_v3.py      # Logistic Regression baseline
-├── train_linear_svm_v2.py               # Linear SVM baseline
-├── train_best_single_model_v3_fixed.py  # Final sentiment model training
-├── utils_eval_v2.py                     # Shared evaluation helpers
-├── credibility_model.py                 # Combined sentiment + credibility logic
-├── build_combined_credibility_model.py  # Build final combined model bundle
-├── apply_combined_credibility_model.py  # Apply combined model to a new processed dataset
-├── suspicious_review_flagger_v2.py      # Run combined scorer on the main dataset
-├── prepare_new_amazon_test_data.py      # Convert a new Amazon JSON file into a test-ready CSV
-├── README.md                            # Project description
-├── .gitignore                           # Ignore large and temporary files
-└── dataset/
-    ├── combined_review_credibility_model.joblib
-    ├── best_single_review_model_v3.joblib
-    ├── amazon_reviews_flagged_v2.csv
-    ├── suspicious_review_summary_v2.csv
-    ├── new_amazon_test_ready.csv
-    ├── new_amazon_test_with_credibility.csv
-    ├── new_amazon_test_credibility_summary.csv
-    └── credibility_examples/
-        ├── suspicious_examples.csv
-        └── not_suspicious_examples.csv
-```
-
-**Notes**
-- The `dataset/` folder may also contain local large CSV / JSON files that should **not** be uploaded to GitHub.
-- The most important final model files are:
-  - `dataset/best_single_review_model_v3.joblib`
-  - `dataset/combined_review_credibility_model.joblib`
-
-## 5. File-by-File Explanation
-
-### `404projecct.ipynb`
-This is the main notebook for the project.
-
-Use it to present:
-- final sentiment metrics
-- credibility scoring results
-- graphs
-- suspicious examples
-- non-suspicious examples
-
-If you want one notebook to present the final project, this is the most important one.
-
-### `textPreprocess_v2.py`
-This script preprocesses the original Amazon review data.
-
-Main jobs:
-- read raw review files
-- combine useful text fields
-- clean review text
-- generate sentiment labels from star ratings
-- build the project-ready dataset
-
-### `dataset_ready_check_v2.py`
-This script checks whether the processed dataset is ready.
-
-Main jobs:
-- inspect data shape
-- check columns
-- check label distribution
-- verify that the data looks correct before training
-
-### `split_dataset_v2.py`
-This script splits the processed dataset into:
 - training set
 - validation set
 - test set
 
-### `train_logistic_regression_v3.py`
-This script trains the Logistic Regression baseline model for sentiment classification.
+The main split files used by the training scripts are:
 
-### `train_linear_svm_v2.py`
-This script trains the Linear SVM baseline model for sentiment classification.
+- dataset\amazon_reviews_train.csv
+- dataset\amazon_reviews_val.csv
+- dataset\amazon_reviews_test.csv
 
-### `train_best_single_model_v3_fixed.py`
-This script trains the strongest final sentiment model in the project.
 
-### `utils_eval_v2.py`
-This file contains shared evaluation helper functions used by the training scripts.
+How to Run the Project
+============================================================
 
-### `credibility_model.py`
-This file contains the core logic for the combined credibility system.
+Step 1: Preprocess the raw Amazon review data
 
-Main jobs:
-- load the trained sentiment model
-- score suspicious patterns in the text
-- combine sentiment and suspiciousness signals
-- generate:
-  - `predicted_sentiment`
-  - `low_credibility_score`
-  - `low_credibility_label`
-  - `suspicious_label`
-  - `suspicious_reasons`
-
-### `build_combined_credibility_model.py`
-This script builds and saves the final combined credibility model.
-
-Typical output:
-- `dataset/combined_review_credibility_model.joblib`
-
-### `apply_combined_credibility_model.py`
-This script applies the final combined credibility model to a new processed dataset.
-
-Main jobs:
-- load a processed CSV dataset
-- score each review for low credibility
-- save the scored output
-- save summary tables
-- save suspicious and non-suspicious example files
-
-### `suspicious_review_flagger_v2.py`
-This script runs the combined credibility scoring pipeline on the main project dataset.
-
-### `prepare_new_amazon_test_data.py`
-This script prepares a new Amazon category dataset for testing.
-
-Main jobs:
-- load a new raw Amazon JSON review file
-- clean the text
-- generate the required columns
-- optionally sample down to a smaller number of rows
-- save a processed CSV ready for model testing
-
-## 6. Main Workflow
-
-This section shows the normal end-to-end workflow.
-
-### Step A. Prepare the Main Project Dataset
-
-Use this only when you want to rebuild the original main dataset.
-
-Run:
-
-```bash
+Command:
 python textPreprocess_v2.py
+
+This step cleans the raw review text and prepares the processed dataset.
+
+
+Step 2: Check that the dataset is ready
+
+Command:
 python dataset_ready_check_v2.py
+
+This step checks whether the dataset has the required columns and is ready
+for training.
+
+
+Step 3: Split the dataset into train, validation, and test sets
+
+Command:
 python split_dataset_v2.py
-```
 
-What this step does:
-- preprocesses the raw Amazon review files
-- cleans the text
-- generates sentiment labels
-- creates the train / validation / test CSV files
+This step creates:
 
-Typical outputs:
-- `dataset/amazon_reviews_ready.csv`
-- `dataset/amazon_reviews_train.csv`
-- `dataset/amazon_reviews_val.csv`
-- `dataset/amazon_reviews_test.csv`
+- dataset\amazon_reviews_train.csv
+- dataset\amazon_reviews_val.csv
+- dataset\amazon_reviews_test.csv
 
-### Step B. Train the Sentiment Models
 
-Run:
+Step 4: Train the sentiment model
 
-```bash
-python train_logistic_regression_v3.py
-python train_linear_svm_v2.py
-python train_best_single_model_v3_fixed.py
-```
+For the current neural-network version, run:
 
-What this step does:
-- trains two baseline sentiment models
-- trains the final stronger sentiment model
-- evaluates the models
-- saves the final best sentiment model bundle
+Command:
+python train_neural_network_model.py
 
-Most important output:
-- `dataset/best_single_review_model_v3.joblib`
+This step trains the MLP sentiment model and saves the neural-network model file.
 
-Other typical outputs:
-- result CSVs
-- classification report CSVs
-- confusion matrix CSVs
-- search / tuning logs
 
-### Step C. Build the Combined Credibility Model
+Step 5: Build the combined credibility model
 
-Run:
-
-```bash
+Command:
 python build_combined_credibility_model.py
-```
 
-What this step does:
-- loads the trained final sentiment model
-- builds the combined credibility scorer
-- saves one final combined model object
+This step combines the sentiment model and the credibility scoring logic into
+one final model file.
 
-Main output:
-- `dataset/combined_review_credibility_model.joblib`
 
-This is the packaged model used later to score datasets.
+Step 6: Score reviews for suspiciousness
 
-### Step D. Run Low-Credibility Detection on the Main Dataset
-
-Run:
-
-```bash
+Command:
 python suspicious_review_flagger_v2.py
-```
 
-What this step does:
-- loads the main processed dataset
-- applies the combined credibility model
-- scores each review
-- saves the flagged dataset and summary
+This step applies the model to reviews and produces suspiciousness results.
 
-Typical outputs:
-- `dataset/amazon_reviews_flagged_v2.csv`
-- `dataset/suspicious_review_summary_v2.csv`
 
-Typical information produced:
-- suspicious rate
-- low / medium / high credibility distribution
-- suspicious reasons
+Step 7: Prepare a new Amazon dataset for testing
 
-### Step E. Present the Final Results
-
-Open:
-
-```text
-404projecct.ipynb
-```
-
-What this notebook should show:
-- final sentiment accuracy and macro-F1
-- confusion matrix / report summary
-- credibility scoring summary
-- graphs
-- suspicious examples
-- non-suspicious examples
-
-This is the main notebook for presentation or final demonstration.
-
-## 7. Workflow for Testing a New Amazon Dataset
-
-This section is for applying the model to a new Amazon category, such as:
-- `Arts_Crafts_and_Sewing_5.json`
-- `Electronics_5.json`
-- other Amazon category review files
-
-### Step 1. Prepare the New Raw JSON Dataset
-
-Script:
-- `prepare_new_amazon_test_data.py`
-
-General form:
-
-```bash
+Command:
 python prepare_new_amazon_test_data.py
-```
 
-Before running, update the settings at the top of the script, especially:
-- `RAW_JSON_PATH`
-- `OUTPUT_CSV_PATH`
-- `DATASET_DISPLAY_NAME`
-- `MAX_ROWS` (optional sample limit)
+This step converts a new Amazon category file into the format needed by the
+model.
 
-Example settings:
 
-```python
-RAW_JSON_PATH = r"dataset\Arts_Crafts_and_Sewing_5.json\Arts_Crafts_and_Sewing_5.json"
-OUTPUT_CSV_PATH = r"dataset\new_amazon_test_ready.csv"
-DATASET_DISPLAY_NAME = None
-MAX_ROWS = 50000
-```
+Step 8: Apply the combined model to the new dataset
 
-What this step does:
-- loads the raw Amazon JSON file
-- combines text fields
-- cleans the text
-- generates the required columns
-- optionally samples down to a smaller size
-- saves a processed CSV
-
-Typical output:
-- `dataset/new_amazon_test_ready.csv`
-
-The processed CSV should contain columns such as:
-- `category`
-- `asin`
-- `overall`
-- `sentiment`
-- `verified`
-- `vote`
-- `unixReviewTime`
-- `text`
-- `clean_text`
-
-### Step 2. Apply the Combined Credibility Model to the New Dataset
-
-Script:
-- `apply_combined_credibility_model.py`
-
-General form:
-
-```bash
+Command:
 python apply_combined_credibility_model.py
-```
 
-This script loads:
-- `dataset/combined_review_credibility_model.joblib`
-- `dataset/new_amazon_test_ready.csv`
+This step produces the credibility and suspiciousness results for the new
+dataset.
 
-What this step does:
-- scores each review in the new dataset
-- predicts sentiment
-- computes `low_credibility_score`
-- assigns `low_credibility_label`
-- assigns `suspicious_label`
-- saves examples
 
-Typical outputs:
-- `dataset/new_amazon_test_with_credibility.csv`
-- `dataset/new_amazon_test_credibility_summary.csv`
-- `dataset/credibility_examples/suspicious_examples.csv`
-- `dataset/credibility_examples/not_suspicious_examples.csv`
+Notebook Files
+============================================================
 
-Typical summary fields:
-- `suspicious_rate`
-- `high_risk_rate`
-- `avg_score`
+You can also open these notebooks to view results and examples:
 
-### Step 3. Inspect the Examples
+- 404projecct.ipynb
 
-Look at:
-- `suspicious_examples.csv`
-- `not_suspicious_examples.csv`
-
-These files are useful for checking whether the model output looks reasonable.
-
-Typical suspicious examples are very short, repetitive, or generic comments such as:
-- `"good. good"`
-- `"ok. ok"`
-
-## 8. One-Shot Quickstart
-
-If the main dataset and sentiment model are already prepared, the shortest workflow is:
-
-1. Build the combined model
-
-```bash
-python build_combined_credibility_model.py
-```
-
-2. Run the combined model on the main dataset
-
-```bash
-python suspicious_review_flagger_v2.py
-```
-
-3. Prepare a new Amazon dataset
-
-```bash
-python prepare_new_amazon_test_data.py
-```
-
-4. Apply the combined model to the new processed dataset
-
-```bash
-python apply_combined_credibility_model.py
-```
-
-5. Open the main notebook
-
-```text
-404projecct.ipynb
-```
-
-## 9. Important Note About Claims
-
-This project should be described as:
-- an Amazon review analysis system
-- a sentiment classification system
-- a low-credibility / suspicious review detection system
-
-It should **not** be described as:
-- a system that proves a review is fake
-- a system that proves whether a review is written by a human or not
-
-The credibility module gives an interpretable risk estimate, not absolute proof.
-
-## 10. Author
-
-Nuohan Lin, Zhixiang Miao, Deyi Li, Junyi Zhao&Tianzuo Xu

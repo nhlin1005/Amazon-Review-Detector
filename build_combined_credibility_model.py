@@ -6,7 +6,7 @@ import joblib
 
 from credibility_model import CredibilityConfig, ReviewCredibilityScorer
 
-SENTIMENT_BUNDLE_PATH = r"dataset\best_single_review_model_v3.joblib"
+SENTIMENT_BUNDLE_PATH = r"dataset\best_single_review_model_nn.joblib"
 OUTPUT_MODEL_PATH = r"dataset\combined_review_credibility_model.joblib"
 
 

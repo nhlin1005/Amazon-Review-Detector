@@ -234,6 +234,5 @@ Output:
 
 You can also open the notebooks below to view results and examples:
 
-- `404projecct.ipynb` — main project notebook
 - `project_result_checker_notebook.ipynb` — result checker: loads all datasets,
   model metrics, credibility summaries, and displays suspicious / not-suspicious examples

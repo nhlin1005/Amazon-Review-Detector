@@ -1,12 +1,16 @@
-
 import json
 from pathlib import Path
 
 import joblib
 
+import __main__
+from train_roberta_model import RobertaSentimentPredictor
+
+__main__.RobertaSentimentPredictor = RobertaSentimentPredictor
+
 from credibility_model import CredibilityConfig, ReviewCredibilityScorer
 
-SENTIMENT_BUNDLE_PATH = r"dataset\best_single_review_model_nn.joblib"
+SENTIMENT_BUNDLE_PATH = r"dataset\best_single_review_model_roberta_fast.joblib"
 OUTPUT_MODEL_PATH = r"dataset\combined_review_credibility_model.joblib"
 
 
@@ -35,7 +39,7 @@ def main():
     output_bundle = {
         "model_type": "combined_sentiment_plus_credibility_scorer",
         "description": (
-            "One packaged model object that combines the existing sentiment classifier "
+            "One packaged model object that combines the Transformer sentiment classifier "
             "with transparent suspiciousness / low-credibility scoring rules."
         ),
         "scorer": scorer,
@@ -48,6 +52,7 @@ def main():
     joblib.dump(output_bundle, output_path)
 
     print(f"Saved combined credibility model to: {output_path}")
+    print(f"Source sentiment bundle: {sentiment_path}")
     print("Config:")
     print(json.dumps(config.__dict__, indent=2))
 
